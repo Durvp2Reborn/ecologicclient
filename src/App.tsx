@@ -21,7 +21,7 @@ function App() {
             })
             .catch((error) => {
                 setError(error.message);
-                setData(null);
+                setData(null);1q1esa43``
             })
 
     })
