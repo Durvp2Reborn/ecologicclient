@@ -35,6 +35,7 @@ function App() {
 
     useEffect(() => {
         if (!productData || skipSurvey) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (productData.totalSurveys < 3) setRequireSurvey(true);
         else setSkipSurvey(true);
     }, [productData]);
