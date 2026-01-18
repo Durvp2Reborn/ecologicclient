@@ -37,6 +37,7 @@ function App() {
 
     useEffect(() => {
         if (!productData || skipSurvey) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (productData.totalSurveys < 3) setRequireSurvey(true);
         else setSkipSurvey(true);
     }, [productData]);
@@ -49,9 +50,8 @@ function App() {
 
                 <div className="scanner-wrapper glass">
                     <BarcodeScanner id="#scanner "options={{ formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8']}} onCapture={(e) => {
-                        window.alert(e[0].rawValue);
-                        // @ts-expect-error
-                        document.getElementById("scanner" as HTMLElement).paused = true;
+                        setBarcode(e[0].rawValue);
+                        setHideScanner(true);
                     }} />
                 </div>
 
