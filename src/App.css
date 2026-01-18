@@ -4,13 +4,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: radial-gradient(circle at top left, #a2f4d1, #7dd1ff);
+  border-radius: 16px;
+  transition: all 0.6s ease;
 }
 
-/* SCAN */
 .glow-title {
   font-size: 2.8rem;
-  color: #baff00;
-  text-shadow: 0 0 25px #baff0066;
+  color: #ff8c42;
+  text-shadow: 0 0 25px #ffd27f;
 }
 
 .scanner-wrapper {
@@ -20,9 +22,8 @@
   margin-bottom: 1.5rem;
 }
 
-/* BUTTONS */
 .button {
-  background: linear-gradient(135deg, #baff00, #00ffe1);
+  background: linear-gradient(135deg, #ff8c42, #ffdc7f);
   border: none;
   border-radius: 14px;
   padding: 0.8rem 1.6rem;
@@ -31,13 +32,11 @@
   transition: all 0.35s ease;
   color: #050b0f;
 }
-
 .button:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 18px 40px #00ffe166;
+  box-shadow: 0 18px 40px #ffe06688;
 }
 
-/* SURVEY */
 .question-card {
   padding: 2rem;
   margin-top: 1.5rem;
@@ -53,15 +52,14 @@
 
 .answer {
   background: rgba(255, 255, 255, 0.12);
-  color: white;
-}
-
-.answer:hover {
-  background: #baff00;
   color: #050b0f;
+  font-weight: 600;
+}
+.answer:hover {
+  background: #ffdc7f;
+  transform: scale(1.05);
 }
 
-/* PROGRESS DOTS */
 .progress-dots {
   display: flex;
   gap: 0.5rem;
@@ -72,45 +70,54 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #555;
+  background: #fff3;
+  transition: all 0.3s ease;
 }
 .dot.active {
-  background: #baff00;
+  background: #ffdc7f;
 }
 
-/* RESULTS */
 .score-ring {
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: conic-gradient(#baff00 75%, #ffffff11 0);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0;
+  --color: #ffd27f;
+  transition: background 0.8s ease;
 }
 
 .score-inner {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: #050b0f;
+  background: #fff8;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+}
+.score-inner.pulse {
+  animation: pulseGlow 0.6s ease;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
+  50% { transform: scale(1.1); box-shadow: 0 0 40px #ffd27f88; }
+  100% { transform: scale(1); box-shadow: 0 0 0 #fff0; }
 }
 
 .score-value {
   font-size: 3rem;
   font-weight: 800;
-  color: #baff00;
+  color: #ff8c42;
 }
-
 .score-label {
   font-size: 0.8rem;
   letter-spacing: 0.15em;
-  color: #00ffe1;
+  color: #ffdc7f;
 }
 
 .results-grid {
@@ -120,11 +127,14 @@
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
-
 .result-card {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.2);
   padding: 1rem;
   border-radius: 14px;
   display: flex;
   justify-content: space-between;
+  transition: transform 0.3s ease;
+}
+.result-card:hover {
+  transform: translateY(-4px) scale(1.02);
 }

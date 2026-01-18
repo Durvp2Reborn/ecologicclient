@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 import "./index.css";
-import { BarcodeScanner } from 'react-barcode-scanner';
-import "react-barcode-scanner/polyfill"
+import { BarcodeScanner } from "react-barcode-scanner";
+import "react-barcode-scanner/polyfill";
 
 interface productResponse {
     name: string;
@@ -28,7 +28,6 @@ function App() {
 
     useEffect(() => {
         if (!barcode) return;
-
         fetch(`https://ecologicapi.onrender.com/api/products/?upc=${barcode}`)
             .then((response) => response.json())
             .then((data) => setProductData(data))
@@ -42,21 +41,22 @@ function App() {
         else setSkipSurvey(true);
     }, [productData]);
 
-    /* ───────────── SCANNER PAGE ───────────── */
     if (!hideScanner) {
         return (
             <div className="page scan-page fade-in">
                 <h1 className="glow-title">Product Scanner</h1>
-
                 <div className="scanner-wrapper glass">
-                    <BarcodeScanner id="#scanner "options={{ formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8']}} onCapture={(e) => {
-                        setBarcode(e[0].rawValue);
-                        setHideScanner(true);
-                    }} />
+                    <BarcodeScanner
+                        id="#scanner"
+                        options={{ formats: ["upc_a", "upc_e", "ean_13", "ean_8"] }}
+                        onCapture={(e) => {
+                            setBarcode(e[0].rawValue);
+                            setHideScanner(true);
+                        }}
+                    />
                 </div>
-
                 <div id="containera">
-                    <input id="barcodeType" placeholder="Enter barcode manually"/>
+                    <input id="barcodeType" placeholder="Enter barcode manually" />
                     <button
                         className="button neon"
                         onClick={() => {
@@ -74,7 +74,6 @@ function App() {
         );
     }
 
-    /* ───────────── SURVEY PAGE ───────────── */
     if (requireSurvey && productData) {
         const quiz: Question[] = [
             {
@@ -88,8 +87,7 @@ function App() {
                 values: [0, 10],
             },
             {
-                question:
-                    "Is the waste from this product recyclable or compostable?",
+                question: "Is the waste from this product recyclable or compostable?",
                 answers: ["Yes", "Partially", "No"],
                 values: [15, 10, 0],
             },
@@ -110,14 +108,12 @@ function App() {
                 <div className="page survey-page fade-slide">
                     <h1 className="survey-title">Quick Eco Survey</h1>
                     <h2 className="product-name">{productData.name}</h2>
-
                     <QuestionCard
                         index={currQuestion}
                         question={quiz[currQuestion]}
                         rotator={setCurrQuestion}
                         updater={(e) => currQuizValues.push(e)}
                     />
-
                     <div className="progress-dots">
                         {quiz.map((_, i) => (
                             <span
@@ -132,7 +128,7 @@ function App() {
 
         fetch(`https://ecologicapi.onrender.com/api/products/?upc=${barcode}`, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 q1: currQuizValues[0],
                 q2: currQuizValues[1],
@@ -150,40 +146,42 @@ function App() {
         setRequireSurvey(false);
     }
 
-    /* ───────────── RESULTS PAGE ───────────── */
     if (hideScanner && !requireSurvey && productData) {
+        const percent = Math.min(100, Math.max(0, productData.overallScore));
         return (
             <div className="page results-page fade-up">
                 <h1 className="glow-title">{productData.name}</h1>
-
-                <div className="score-ring">
-                    <div className="score-inner">
-                        <div className="score-value">
-                            {productData.overallScore.toFixed(0)}
-                        </div>
+                <div
+                    className="score-ring"
+                    style={{
+                        background: `conic-gradient(var(--color) ${percent * 3.6}deg, #eee3 0deg)`,
+                    }}
+                >
+                    <div className="score-inner" onClick={() => {
+                        const inner = document.querySelector('.score-inner') as HTMLElement
+                        inner.classList.add('pulse')
+                        setTimeout(() => inner.classList.remove('pulse'), 600)
+                    }}>
+                        <div className="score-value">{percent.toFixed(0)}</div>
                         <div className="score-label">Eco Score</div>
                     </div>
                 </div>
 
                 <div className="results-grid glass">
-                    <Result label="Packaging" value={productData.q1} max={30}/>
-                    <Result label="Efficiency" value={productData.q2} max={10}/>
-                    <Result label="Waste" value={productData.q3} max={15}/>
-                    <Result label="Meat Impact" value={productData.q4} max={15}/>
-                    <Result label="Shipping" value={productData.q5} max={30}/>
+                    <Result label="Packaging" value={productData.q1} max={30} />
+                    <Result label="Efficiency" value={productData.q2} max={10} />
+                    <Result label="Waste" value={productData.q3} max={15} />
+                    <Result label="Meat Impact" value={productData.q4} max={15} />
+                    <Result label="Shipping" value={productData.q5} max={30} />
                 </div>
 
-                <p className="survey-count">
-                    Based on {productData.totalSurveys} surveys
-                </p>
+                <p className="survey-count">Based on {productData.totalSurveys} surveys</p>
             </div>
         );
     }
 }
 
 export default App;
-
-/* ───────── COMPONENTS ───────── */
 
 interface Question {
     question: string;
@@ -205,7 +203,6 @@ function QuestionCard({
     return (
         <div className="question-card glass">
             <h2>{question.question}</h2>
-
             <div className="answer-grid">
                 {question.answers.map((a, i) => (
                     <button
@@ -213,11 +210,7 @@ function QuestionCard({
                         className="button answer"
                         data-points={question.values[i]}
                         onClick={(e) => {
-                            updater(
-                                parseInt(
-                                    e.currentTarget.dataset.points as string
-                                )
-                            );
+                            updater(parseInt(e.currentTarget.dataset.points as string));
                             rotator(index + 1);
                         }}
                     >
@@ -229,15 +222,7 @@ function QuestionCard({
     );
 }
 
-function Result({
-                    label,
-                    value,
-                    max,
-                }: {
-    label: string;
-    value: number;
-    max: number;
-}) {
+function Result({ label, value, max }: { label: string; value: number; max: number }) {
     return (
         <div className="result-card">
             <span>{label}</span>
